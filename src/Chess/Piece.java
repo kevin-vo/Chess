@@ -78,6 +78,18 @@ public class Piece {
     Piece copy() {
         return new Piece(getColor(), getRow(), getCol());
     }
+    
+    /** Returns true if piece has moved. */
+    boolean hasMoved() {
+        return _hasMoved;
+    }
+    
+    /** Updates _hasMoved to true if piece has moved. */
+    void updateHasMoved() {
+        _hasMoved = true;
+    }
+    
+    private boolean _hasMoved;
 
     /** Row in board. */
     private int R;

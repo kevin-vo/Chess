@@ -79,4 +79,5 @@ public class Rook extends Piece{
         return new Rook(getColor(), getRow(), getCol());
     }
     
+    
 }

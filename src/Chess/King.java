@@ -46,8 +46,10 @@ public class King extends Piece{
         
     }
     
+    
     King copy() {
         return new King(getColor(), getRow(), getCol());
     }
+    
     
 }

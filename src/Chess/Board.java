@@ -102,8 +102,14 @@ public class Board {
         if (!getPiece(r1, c1).getColor().equals(_turn)) {
             return false;
         }
+        //castling prioritized since it is a special move
+        if (makeCastling(r1, c1, r2, c2)) {
+            return true;
+        }
         if (isValid(r1, c1, r2, c2)) {
-            set(getPiece(r1, c1), r2, c2);
+            Piece p = getPiece(r1, c1);
+            p.updateHasMoved();
+            set(p, r2, c2);
             set(new Empty("empty", r1, c1), r1, c1);
             setTurn();
             return true;
@@ -116,6 +122,107 @@ public class Board {
     void makeMoveNaive(int r1, int c1, int r2, int c2) {
         set(getPiece(r1, c1), r2, c2);
         set(new Empty("empty", r1, c1), r1, c1);
+    }
+    
+    /** Attempts to make a castling move. Returns true if valid. */
+    boolean makeCastling(int r1, int c1, int r2, int c2) {
+        Piece possibleKing = getPiece(r1, c1);
+        if (!possibleKing.getName().equalsIgnoreCase("k") || possibleKing.hasMoved()) {
+            return false;
+        }
+        if (possibleKing.getName().equalsIgnoreCase("k")) {
+            King king = (King) getPiece(r1, c1);
+            if (king.inCheck(this)) {
+                return false;
+            }
+        }
+        if (possibleKing.getName().equals("K")) {
+            if (r2 == 7 && c2 == 2) {
+                Piece possibleRook = getPiece(7, 0);
+                if (possibleRook.getName().equals("R") && !possibleRook.hasMoved()
+                        && getPiece(7, 1).getName().equals(".")
+                        && getPiece(7, 2).getName().equals(".")
+                        && getPiece(7, 3).getName().equals(".")) {
+                    makeMoveNaive(r1, c1, r2, c2);
+                    makeMoveNaive(7, 0, 7, 3);
+                    
+                    if (((King) possibleKing).inCheck(this)) {
+                        makeMoveNaive(r2, c2, r1, c1);
+                        makeMoveNaive(7, 3, 7, 0);
+                        return false;
+                    } else {
+                        setTurn();
+                        possibleKing.updateHasMoved();
+                        possibleRook.updateHasMoved();
+                        return true;
+                    }
+                }
+            }
+            if (r2 == 7 && c2 == 6) {
+                Piece possibleRook = getPiece(7, 7);
+                if (possibleRook.getName().equals("R") && !possibleRook.hasMoved()
+                        && getPiece(7, 5).getName().equals(".")
+                        && getPiece(7, 6).getName().equals(".")) {
+                    makeMoveNaive(r1, c1, r2, c2);
+                    makeMoveNaive(7, 7, 7, 5);
+                    
+                    if (((King) possibleKing).inCheck(this)) {
+                        makeMoveNaive(r2, c2, r1, c1);
+                        makeMoveNaive(7, 5, 7, 7);
+                        return false;
+                    } else {
+                        setTurn();
+                        possibleKing.updateHasMoved();
+                        possibleRook.updateHasMoved();
+                        return true;
+                    }
+                }
+            }
+        }
+        if (possibleKing.getName().equals("k")) {
+            if (r2 == 0 && c2 == 2) {
+                Piece possibleRook = getPiece(7, 0);
+                if (possibleRook.getName().equals("r") && !possibleRook.hasMoved()
+                        && getPiece(0, 1).getName().equals(".")
+                        && getPiece(0, 2).getName().equals(".")
+                        && getPiece(0, 3).getName().equals(".")) {
+                    makeMoveNaive(r1, c1, r2, c2);
+                    makeMoveNaive(0, 0, 0, 3);
+                    
+                    if (((King) possibleKing).inCheck(this)) {
+                        makeMoveNaive(r2, c2, r1, c1);
+                        makeMoveNaive(0, 3, 0, 0);
+                        return false;
+                    } else {
+                        setTurn();
+                        possibleKing.updateHasMoved();
+                        possibleRook.updateHasMoved();
+                        return true;
+                    }
+                }
+            }
+            if (r2 == 0 && c2 == 6) {
+                Piece possibleRook = getPiece(0, 7);
+                if (possibleRook.getName().equals("r") && !possibleRook.hasMoved()
+                        && getPiece(0, 5).getName().equals(".")
+                        && getPiece(0, 6).getName().equals(".")) {
+                    makeMoveNaive(r1, c1, r2, c2);
+                    makeMoveNaive(0, 7, 0, 5);
+                    
+                    if (((King) possibleKing).inCheck(this)) {
+                        makeMoveNaive(r2, c2, r1, c1);
+                        makeMoveNaive(0, 5, 0, 7);
+                        return false;
+                    } else {
+                        setTurn();
+                        possibleKing.updateHasMoved();
+                        possibleRook.updateHasMoved();
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
     
     /** Determines whether move is a valid move. Takes into account
@@ -170,7 +277,12 @@ public class Board {
                 }
             }
         }
+        _gameOver = true;
         return true;
+    }
+
+    boolean isGameOver() {
+        return _gameOver;
     }
     
     /** Gets piece at r, c. */
@@ -232,4 +344,7 @@ public class Board {
     
     /** Represents the white king. */
     private Piece _whiteKing;
+    
+    /** Represents game over boolean. */
+    private boolean _gameOver;
 }

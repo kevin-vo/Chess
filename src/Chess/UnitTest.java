@@ -221,7 +221,6 @@ public class UnitTest {
        Board board = new Board();
        //board.printBoard();
        board.makeMoveNaive(7, 4, 5, 3);
-       Piece p = board.getKing("white");
        board.makeMoveNaive(0, 0, 2, 3);
        board.makeMoveNaive(7, 2, 5, 2);
        board.makeMoveNaive(1, 0, 2, 0);
@@ -269,5 +268,40 @@ public class UnitTest {
        //board.printBoard();
        assertTrue(board.isCheckmate("black"));
        
+   }
+   
+   @Test
+   public void castlingTest() {
+       Board board = new Board();
+       board.printBoard();
+       board.makeMove(6, 1, 4, 1);
+       board.makeMove(1, 6, 2, 6);
+       board.makeMove(7, 2, 5, 0);
+       board.makeMove(0, 5, 2, 7);
+       board.makeMove(6, 2, 4, 2);
+       board.makeMove(0, 6, 2, 5);
+       board.makeMove(7, 3, 5, 1);
+       board.makeMove(1, 4, 3, 4);
+       board.makeMove(7, 1, 5, 2);
+       assertTrue(board.makeMove(0, 4, 0, 6));
+       assertFalse(board.makeMove(7, 4, 7, 6));
+       assertTrue(board.makeMove(7, 4, 7, 2));
+       board.printBoard();
+   }
+   
+   @Test
+   public void castlingTest2() {
+       Board board = new Board();
+       board.printBoard();
+       board.makeMove(6, 1, 4, 1);
+       board.makeMove(1, 6, 2, 6);
+       board.makeMove(7, 2, 5, 0);
+       board.makeMove(0, 5, 2, 7);
+       board.makeMove(6, 2, 4, 2);
+       board.makeMove(0, 6, 2, 5);
+       board.makeMove(7, 3, 5, 1);
+       board.makeMove(1, 4, 3, 4);
+       board.makeMove(7, 1, 5, 2);
+       board.printBoard();
    }
 }
