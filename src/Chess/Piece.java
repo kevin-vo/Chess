@@ -1,6 +1,6 @@
 package Chess;
 
-import static org.junit.Assert.*;
+//import static org.junit.Assert.*;
 
 /**
  * Represents the super class piece.
@@ -12,7 +12,7 @@ public class Piece {
     /** Constructs piece with initial position (R, C). */
     Piece(String color, int r, int c) {
         updatePosition(r, c);
-        assertTrue(color.equals("white") || color.equals("black") || color.equals("empty"));
+        //assertTrue(color.equals("white") || color.equals("black") || color.equals("empty"));
         _color = color;
         if (color.equals("white")) {
             _opposite = "black";
